@@ -1,0 +1,42 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+/* Estilos para el dashboard */
+.action-buttons .btn {
+    margin-bottom: 10px;
+}
+
+/* Estilos para formularios */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Estilos para actividad reciente */
+#recentActivity .list-group-item {
+    padding: 10px 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+}
+.modal-backdrop {
+    opacity: 0.5 !important;
+}

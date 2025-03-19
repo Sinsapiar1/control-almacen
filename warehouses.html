@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Bodegas - Sistema de Control de Almacén</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Control de Almacén</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="entries.html" id="entriesLink">Entradas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="exits.html" id="exitsLink">Salidas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html" id="inventoryLink">Inventario</a>
+                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="warehouses.html">Bodegas</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link" id="userDisplay"></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logoutBtn">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-building"></i> Gestión de Bodegas</h5>
+                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#addWarehouseModal">
+                            <i class="bi bi-plus-circle"></i> Nueva Bodega
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="warehousesList">
+                            <p class="text-center">Cargando bodegas...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="bi bi-people"></i> Asignación de Bodegas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="usersList">
+                            <p class="text-center">Cargando usuarios...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar bodegas -->
+    <div class="modal fade" id="addWarehouseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Nueva Bodega</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addWarehouseForm">
+                        <div class="mb-3">
+                            <label for="warehouseName" class="form-label">Nombre de la Bodega</label>
+                            <input type="text" class="form-control" id="warehouseName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="warehouseLocation" class="form-label">Ubicación</label>
+                            <input type="text" class="form-control" id="warehouseLocation" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Guardar Bodega</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para asignar bodegas -->
+    <div class="modal fade" id="assignWarehouseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Asignar Bodegas a Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignWarehouseForm">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <p><strong>Usuario:</strong> <span id="userName"></span></p>
+                        </div>
+                        <div class="mb-3" id="warehousesCheckboxes">
+                            <p class="text-center">Cargando bodegas...</p>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Guardar Asignación</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
+    
+    <!-- Tu script de configuración -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/warehouses.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Control de Almacén</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Control de Almacén</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="entries.html" id="entriesLink">Entradas</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="exits.html" id="exitsLink">Salidas</a>
+                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="inventory.html" id="inventoryLink">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="warehouses.html">Bodegas</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link" id="userDisplay"></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logoutBtn">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <h2>Dashboard</h2>
+        <div class="row mt-4">
+            <!-- Resumen de Inventario -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="bi bi-boxes"></i> Resumen de Inventario</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="inventorySummary">Cargando...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actividad Reciente -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="bi bi-clock-history"></i> Actividad Reciente</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentActivity">Cargando...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Acciones Rápidas -->
+        <div class="row mt-2">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <a href="entries.html" class="btn btn-outline-primary d-block" id="newEntryBtn">
+                                    <i class="bi bi-box-arrow-in-down"></i> Nueva Entrada
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="exits.html" class="btn btn-outline-primary d-block" id="newExitBtn">
+                                    <i class="bi bi-box-arrow-up"></i> Nueva Salida
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="#" class="btn btn-outline-primary d-block" id="newTransferBtn">
+                                    <i class="bi bi-arrow-left-right"></i> Nuevo Traspaso
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a href="#" class="btn btn-outline-primary d-block" id="generateReportBtn">
+                                    <i class="bi bi-file-earmark-text"></i> Generar Reporte
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    
+    <!-- Tu script de configuración -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/transactions.js"></script>
+</body>
+</html>
