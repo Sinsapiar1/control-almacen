@@ -16,12 +16,22 @@ function registerUser(email, password, fullName) {
             });
         })
         .then(() => {
-            alert('Registro exitoso. Por favor verifica tu correo electrónico.');
+            // Reemplazamos el alert por showToast
+            if (typeof showToast === 'function') {
+                showToast('Registro exitoso. Por favor verifica tu correo electrónico.', 'success');
+            } else {
+                alert('Registro exitoso. Por favor verifica tu correo electrónico.');
+            }
             window.location.href = 'login.html';
         })
         .catch((error) => {
             console.error('Error al registrar:', error);
-            alert('Error al registrar: ' + error.message);
+            // Reemplazamos el alert por showToast
+            if (typeof showToast === 'function') {
+                showToast('Error al registrar: ' + error.message, 'danger');
+            } else {
+                alert('Error al registrar: ' + error.message);
+            }
         });
 }
 
@@ -38,7 +48,11 @@ if (document.getElementById('registerForm')) {
         
         // Validar que las contraseñas coincidan
         if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden');
+            if (typeof showToast === 'function') {
+                showToast('Las contraseñas no coinciden', 'warning');
+            } else {
+                alert('Las contraseñas no coinciden');
+            }
             return;
         }
         
@@ -52,7 +66,11 @@ function loginUser(email, password) {
         .then((userCredential) => {
             // Verificar si el correo está verificado
             if (!userCredential.user.emailVerified) {
-                alert('Por favor verifica tu correo electrónico antes de iniciar sesión.');
+                if (typeof showToast === 'function') {
+                    showToast('Por favor verifica tu correo electrónico antes de iniciar sesión.', 'warning');
+                } else {
+                    alert('Por favor verifica tu correo electrónico antes de iniciar sesión.');
+                }
                 auth.signOut();
                 return;
             }
@@ -62,7 +80,11 @@ function loginUser(email, password) {
         })
         .catch((error) => {
             console.error('Error al iniciar sesión:', error);
-            alert('Error al iniciar sesión: ' + error.message);
+            if (typeof showToast === 'function') {
+                showToast('Error al iniciar sesión: ' + error.message, 'danger');
+            } else {
+                alert('Error al iniciar sesión: ' + error.message);
+            }
         });
 }
 
@@ -83,11 +105,19 @@ if (document.getElementById('loginForm')) {
 function resetPassword(email) {
     auth.sendPasswordResetEmail(email)
         .then(() => {
-            alert('Se ha enviado un correo para restablecer tu contraseña.');
+            if (typeof showToast === 'function') {
+                showToast('Se ha enviado un correo para restablecer tu contraseña.', 'success');
+            } else {
+                alert('Se ha enviado un correo para restablecer tu contraseña.');
+            }
         })
         .catch((error) => {
             console.error('Error al restablecer contraseña:', error);
-            alert('Error: ' + error.message);
+            if (typeof showToast === 'function') {
+                showToast('Error: ' + error.message, 'danger');
+            } else {
+                alert('Error: ' + error.message);
+            }
         });
 }
 
@@ -122,7 +152,11 @@ window.promoteToAdmin = async function() {
     const user = auth.currentUser;
     
     if (!user) {
-        alert('Debes iniciar sesión para realizar esta acción.');
+        if (typeof showToast === 'function') {
+            showToast('Debes iniciar sesión para realizar esta acción.', 'warning');
+        } else {
+            alert('Debes iniciar sesión para realizar esta acción.');
+        }
         return;
     }
     
@@ -131,9 +165,17 @@ window.promoteToAdmin = async function() {
             role: 'admin'
         });
         
-        alert('¡Ahora eres administrador! Recarga la página para ver los cambios.');
+        if (typeof showToast === 'function') {
+            showToast('¡Ahora eres administrador! Recarga la página para ver los cambios.', 'success');
+        } else {
+            alert('¡Ahora eres administrador! Recarga la página para ver los cambios.');
+        }
     } catch (error) {
         console.error('Error al convertir en administrador:', error);
-        alert('Error: ' + error.message);
+        if (typeof showToast === 'function') {
+            showToast('Error: ' + error.message, 'danger');
+        } else {
+            alert('Error: ' + error.message);
+        }
     }
 }

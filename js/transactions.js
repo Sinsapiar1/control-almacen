@@ -165,8 +165,6 @@ async function loadRecentActivity(warehouses) {
 }
 
 // Cargar resumen de inventario
-
-// Cargar resumen de inventario
 async function loadInventorySummary(warehouses) {
     if (!inventorySummary) return;
     

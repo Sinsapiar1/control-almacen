@@ -923,7 +923,37 @@ if (wasteForm) {
 
 // Ver detalles de salida (placeholder para función futura)
 function viewExitDetails(exitId) {
-    alert(`Detalles de salida con ID: ${exitId}\nEsta funcionalidad estará disponible próximamente.`);
+    // Crear un modal temporal para mostrar los detalles
+    const modalHTML = `
+        <div class="modal fade" id="exitDetailsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detalles de la Salida</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="exitDetailsBody">
+                        <p class="text-center"><i class="bi bi-hourglass spinner"></i> Cargando detalles...</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Insertar modal en el documento
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHTML;
+    document.body.appendChild(modalContainer);
+
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('exitDetailsModal'));
+    modal.show();
+
+    // Cargar detalles
+    loadExitDetails(exitId);
 }
 
 // Al cargar la página
@@ -935,3 +965,139 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('openTransferModal');
     }
 });
+async function loadExitDetails(exitId) {
+    const exitDetailsBody = document.getElementById('exitDetailsBody');
+
+    try {
+        const exitDoc = await db.collection('transactions').doc(exitId).get();
+
+        if (!exitDoc.exists) {
+            exitDetailsBody.innerHTML = `
+                <div class="alert alert-warning">
+                    No se encontró la salida solicitada.
+                </div>
+            `;
+            return;
+        }
+
+        const exit = exitDoc.data();
+        const date = exit.timestamp ? exit.timestamp.toDate() : new Date();
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+
+        // Obtener nombre de bodega
+        let warehouseName = "Desconocida";
+        if (exit.warehouseId) {
+            const warehouseDoc = await db.collection('warehouses').doc(exit.warehouseId).get();
+            warehouseName = warehouseDoc.data().name || "Desconocida";
+        }
+
+        // Determinar tipo y datos específicos
+        let typeHTML = '';
+        let additionalInfoHTML = '';
+
+        if (exit.type === 'exit') {
+            typeHTML = '<span class="badge bg-primary">Cliente</span>';
+            additionalInfoHTML = `
+                <p><strong>Cliente:</strong> ${exit.clientName || '-'}</p>
+                <p><strong>Referencia:</strong> ${exit.reference || '-'}</p>
+            `;
+        } else if (exit.type === 'transfer') {
+            typeHTML = '<span class="badge bg-info text-dark">Traspaso</span>';
+
+            // Obtener nombre de bodega de destino
+            let targetWarehouseName = "Desconocida";
+            if (exit.targetWarehouseId) {
+                const targetWarehouseDoc = await db.collection('warehouses').doc(exit.targetWarehouseId).get();
+                targetWarehouseName = targetWarehouseDoc.data().name || "Desconocida";
+            }
+
+            additionalInfoHTML = `
+                <p><strong>Bodega de Destino:</strong> ${targetWarehouseName}</p>
+                <p><strong>Referencia:</strong> ${exit.transferReference || '-'}</p>
+            `;
+        } else if (exit.type === 'waste') {
+            typeHTML = '<span class="badge bg-warning text-dark">Merma</span>';
+            additionalInfoHTML = `
+                <p><strong>Motivo:</strong> ${getWasteReasonText(exit.wasteReason)}</p>
+            `;
+        }
+
+        // Construir tabla de productos
+        let productsHTML = `
+            <div class="table-responsive mt-3">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        if (exit.products && exit.products.length > 0) {
+            exit.products.forEach(product => {
+                const price = product.price || 0;
+                const quantity = product.quantity || 0;
+                const subtotal = price * quantity;
+                
+                productsHTML += `
+                    <tr>
+                        <td>${product.productName}</td>
+                        <td>${quantity}</td>
+                        <td>$${price.toFixed(2)}</td>
+                        <td>$${subtotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        } else {
+            productsHTML += `
+                <tr>
+                    <td colspan="4" class="text-center">No hay productos registrados</td>
+                </tr>
+            `;
+        }
+
+        productsHTML += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        // Mostrar todos los detalles
+        exitDetailsBody.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Información General</h6>
+                    <p><strong>Tipo:</strong> ${typeHTML}</p>
+                    <p><strong>Fecha:</strong> ${formattedDate}</p>
+                    <p><strong>Bodega:</strong> ${warehouseName}</p>
+                    <p><strong>Usuario:</strong> ${exit.userEmail || '-'}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Detalles Específicos</h6>
+                    ${additionalInfoHTML}
+                </div>
+            </div>
+
+            <hr>
+
+            <h6>Productos</h6>
+            ${productsHTML}
+
+            <div class="mt-3">
+                <h6>Notas</h6>
+                <p>${exit.notes || 'Sin notas adicionales'}</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error al cargar detalles de la salida:', error);
+        exitDetailsBody.innerHTML = `
+            <div class="alert alert-danger">
+                Error al cargar detalles. Intenta nuevamente.
+            </div>
+        `;
+    }
+}
