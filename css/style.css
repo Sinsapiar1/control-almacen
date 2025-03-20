@@ -1,18 +1,85 @@
+:root {
+    --color-primario: #1a56db;
+    --color-secundario: #4299e1;
+    --color-fondo: #f8f9fa;
+    --color-texto: #333;
+    --color-sombra: rgba(0,0,0,0.1);
+    --color-hover-sombra: rgba(0,0,0,0.15);
+    --color-borde-focus: rgba(66, 153, 225, 0.25);
+}
+
+* {
+    transition: all 0.3s ease;
+}
+
 body {
-    background-color: #f8f9fa;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: 'Inter', 'Roboto', sans-serif;
+    line-height: 1.6;
 }
 
 .navbar {
+    background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+    box-shadow: 0 4px 6px var(--color-sombra);
     margin-bottom: 20px;
 }
 
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
 .card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px var(--color-sombra);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 1.5rem;
 }
 
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--color-hover-sombra);
+}
+
 .card-header {
-    font-weight: bold;
+    background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+    color: white;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+    border: none;
+    box-shadow: 0 4px 6px var(--color-sombra);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px var(--color-sombra);
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.form-control:focus {
+    border-color: var(--color-secundario);
+    box-shadow: 0 0 0 0.2rem var(--color-borde-focus);
+}
+
+.form-control:invalid {
+    border-color: #dc3545;
+}
+
+.form-control:valid {
+    border-color: #198754;
 }
 
 /* Estilos para el dashboard */
@@ -20,89 +87,115 @@ body {
     margin-bottom: 10px;
 }
 
-/* Estilos para formularios */
-.form-control:focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
 /* Estilos para actividad reciente */
 #recentActivity .list-group-item {
     padding: 10px 15px;
+    transition: background-color 0.3s ease;
 }
 
-/* Responsive */
+#recentActivity .list-group-item:hover {
+    background-color: rgba(66, 153, 225, 0.05);
+}
+
+/* Modal Improvements */
+.modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: var(--color-fondo);
+    border-bottom: none;
+}
+
+.modal-backdrop {
+    opacity: 0.5 !important;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .card-body {
         padding: 1rem;
     }
-}
-.modal-backdrop {
-    opacity: 0.5 !important;
-}
-/* Añade esto a tu archivo css/style.css */
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 8px;
-    overflow: hidden;
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-/* Mejora visuales de la barra de navegación */
-.navbar {
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Mejora botones */
-.btn-primary {
+/* Evasive Button Effect */
+.evasive-button {
+    position: relative;
     transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
+.form-control:invalid ~ .d-grid .evasive-button:hover {
+    transform: translate(calc(100% - 100px), -2px);
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.form-control:valid ~ .d-grid .evasive-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
 }
-
-.brand-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    padding: 8px 15px;
-    margin: 0;
-    background: linear-gradient(135deg, #1a56db, #4299e1);
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    display: inline-block;
+/* Estilos base para modo nocturno */
+/* Estilos de modo oscuro más detallados */
+body.dark-mode {
+    --color-fondo: #1f1f1f;  /* Gris oscuro más suave */
+    --color-texto: #e0e0e0;
+    --color-fondo-secundario: #2a2a2a;  /* Gris medio */
+    --color-card: #353535;  /* Gris más claro */
+    
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
 }
 
-.brand-title:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
-    background: linear-gradient(135deg, #2563eb, #60a5fa);
+.dark-mode .card {
+    background-color: var(--color-card);
+    color: var(--color-texto);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.navbar-brand {
-    display: flex;
-    align-items: center;
+.dark-mode .card-header {
+    background-color: var(--color-fondo-secundario);
+    color: #ffffff;
+}
+.dark-mode .modal-content {
+    background-color: var(--color-card);
+    color: var(--color-texto);
 }
 
-.brand-icon {
-    margin-right: 10px;
-    font-size: 1.8rem;
+.dark-mode .modal-header {
+    border-bottom: 1px solid var(--color-borde);
 }
 
-@media (max-width: 768px) {
-    .brand-title {
-        font-size: 1.2rem;
-        padding: 6px 10px;
-    }
+.dark-mode .table {
+    color: var(--color-texto);
+}
+
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.dark-mode .form-control {
+    background-color: var(--color-fondo-secundario);
+    color: var(--color-texto);
+    border-color: var(--color-borde);
+}
+
+.dark-mode .list-group-item {
+    background-color: var(--color-card);
+    color: var(--color-texto);
+    border-color: var(--color-borde);
+}
+.dark-mode .btn-primary {
+    background-color: #3f51b5 !important;
+    color: white !important;
+}
+
+.dark-mode .stock-bajo {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+    font-weight: bold;
 }

@@ -383,71 +383,71 @@ function viewProductDetails(productId) {
 
         // Crear modal dinámicamente
         const modalHTML = document.createElement('div');
-        modalHTML.innerHTML = `
-            <div class="modal fade" id="productDetailsModal">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Detalles del Producto: ${product.productName}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
+     modalHTML.innerHTML = `
+         <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog">
+             <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                         <h5 class="modal-title">Detalles del Producto: ${product.productName}</h5>
+                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                     </div>
                         <div class="modal-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h6>Información General</h6>
-                                            <p><strong>Cantidad Actual:</strong> 
-                                                <span class="badge bg-${getStockStatusColor(product.quantity)}">
-                                                    ${product.quantity} unidades
-                                                </span>
-                                            </p>
-                                            <p><strong>Último Precio:</strong> $${product.lastPrice?.toFixed(2) || 'N/A'}</p>
-                                            <p><strong>Valor Total:</strong> $${(product.quantity * (product.lastPrice || 0)).toFixed(2)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h6>Ubicación</h6>
-                                            <p><strong>Bodega:</strong> ${warehouses[product.warehouseId]?.name || 'Desconocida'}</p>
-                                            <p><strong>Última Actualización:</strong> ${product.updatedAt?.toDate().toLocaleDateString() || 'N/A'}</p>
-                                        </div>
-                                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Información General</h6>
+                                    <p><strong>Cantidad Actual:</strong> 
+                                        <span class="badge bg-${getStockStatusColor(product.quantity)}">
+                                            ${product.quantity} unidades
+                                        </span>
+                                    </p>
+                                    <p><strong>Último Precio:</strong> $${product.lastPrice?.toFixed(2) || 'N/A'}</p>
+                                    <p><strong>Valor Total:</strong> $${(product.quantity * (product.lastPrice || 0)).toFixed(2)}</p>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="col-md-6">
                             <div class="card">
-                                <div class="card-header">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0">Movimientos Recientes</h6>
-                                        <div class="btn-group btn-group-sm" role="group">
-                                            <button type="button" class="btn btn-outline-primary active" onclick="filterMovements('all')">
-                                                Todos
-                                            </button>
-                                            <button type="button" class="btn btn-outline-success" onclick="filterMovements('entry')">
-                                                Entradas
-                                            </button>
-                                            <button type="button" class="btn btn-outline-danger" onclick="filterMovements('exit')">
-                                                Salidas
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="card-body">
-                                    <div id="movimientosList">
-                                        <p class="text-center">
-                                            <i class="bi bi-hourglass-split"></i> Cargando movimientos...
-                                        </p>
-                                    </div>
+                                    <h6>Ubicación</h6>
+                                    <p><strong>Bodega:</strong> ${warehouses[product.warehouseId]?.name || 'Desconocida'}</p>
+                                    <p><strong>Última Actualización:</strong> ${product.updatedAt?.toDate().toLocaleDateString() || 'N/A'}</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Movimientos Recientes</h6>
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Filtrar movimientos">
+                                    <button type="button" class="btn btn-outline-primary active" onclick="filterMovements('all')">
+                                        Todos
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" onclick="filterMovements('entry')">
+                                        Entradas
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger" onclick="filterMovements('exit')">
+                                        Salidas
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="movimientosList">
+                                <p class="text-center">
+                                    <i class="bi bi-hourglass-split"></i> Cargando movimientos...
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        `;
+        </div>
+    </div>
+`;
 
         // Remover modal anterior si existe
         const oldModal = document.getElementById('productDetailsModal');
@@ -460,7 +460,8 @@ function viewProductDetails(productId) {
 
         // Inicializar y mostrar modal
         const modal = new bootstrap.Modal(document.getElementById('productDetailsModal'));
-        modal.show();
+         modal.show();
+        document.getElementById('productDetailsModal').removeAttribute('inert');
 
         // Cargar movimientos
         loadProductMovements(product.productName);
@@ -486,9 +487,9 @@ function filterMovements(type) {
     let filtered = movimientosFiltrados;
 
     if (type === 'entry') {
-        filtered = movimientosFiltrados.filter(m => m.type === 'entry');
+        filtered = movimientosFiltrados.filter(m => m.type === 'entry' || m.type === 'return');
     } else if (type === 'exit') {
-        filtered = movimientosFiltrados.filter(m => ['exit', 'waste'].includes(m.type));
+        filtered = movimientosFiltrados.filter(m => m.type === 'exit' || m.type === 'waste');
     }
 
     if (filtered.length === 0) {
@@ -506,36 +507,26 @@ function filterMovements(type) {
 
 async function loadProductMovements(productName) {
     const movimientosList = document.getElementById('movimientosList');
-    
     try {
         const transactionsQuery = await db.collection('transactions')
-            .where('products', 'array-contains', {productName: productName})
             .orderBy('timestamp', 'desc')
             .limit(20)
             .get();
 
-        if (transactionsQuery.empty) {
-            movimientosList.innerHTML = `
-                <div class="alert alert-info">
-                    No hay movimientos registrados para este producto
-                </div>
-            `;
-            return;
-        }
-
         const movements = [];
         transactionsQuery.forEach(doc => {
             const transaction = doc.data();
-            const productMovement = transaction.products?.find(p => 
-                p.productName === productName
+            const productInTransaction = transaction.products?.find(p => 
+                p.productName === productName ||
+                p.name === productName
             );
 
-            if (productMovement) {
+            if (productInTransaction) {
                 movements.push({
                     date: transaction.timestamp?.toDate(),
                     type: transaction.type,
-                    quantity: productMovement.quantity,
-                    price: productMovement.price,
+                    quantity: productInTransaction.quantity,
+                    price: productInTransaction.price,
                     reference: getTransactionReference(transaction),
                     warehouse: warehouses[transaction.warehouseId]?.name || 'Desconocida'
                 });
@@ -554,7 +545,6 @@ async function loadProductMovements(productName) {
         `;
     }
 }
-
 
 function displayMovements(movements) {
     const movimientosList = document.getElementById('movimientosList');
